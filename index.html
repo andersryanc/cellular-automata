@@ -1,0 +1,137 @@
+<html>
+  <head>
+    <style type="text/css">
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+      }
+
+      #controls {
+        padding: 10px;
+      }
+
+      .cell {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background-color: #ddd;
+        margin: 2px;
+      }
+
+      .cell.active {
+        background-color: #51cafe;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="controls">
+      <label for="select-ruleSet">Rule Set:</label>
+      <select name="ruleSet" id="select-ruleSet">
+        <option value="105">105</option>
+        <option value="150" selected>150</option>
+      </select>
+
+      <label for="select-random">Random?</label>
+      <select name="random" id="select-random">
+        <option value="no" selected>No</option>
+        <option value="yes">Yes</option>
+      </select>
+
+      <button id="button-generate">Generate</button>
+    </div>
+    <script>
+      const rowLength = 100;
+      const numRows = 100;
+      let prevStates = [];
+
+      const ruleSets = {
+        '105': { '111': 0, '110': 1, '101': 1, '100': 0, '011': 1, '010': 0, '001': 0, '000': 1 },
+        '150': { '111': 1, '110': 0, '101': 0, '100': 1, '011': 0, '010': 1, '001': 1, '000': 0 },
+      };
+
+      function randomBinary() {
+        return Math.floor( Math.random() * 2 );
+      }
+
+      function generateRandomStates() {
+        let states = [];
+        for ( let i = 0; i < rowLength; i++ ){
+          states.push( randomBinary() );
+        }
+
+        return states;
+      }
+
+      function renderRow(states) {
+        let rowEl = document.createElement('div');
+        rowEl.classList.add('row');
+
+        states.forEach(state => {
+          let cell = document.createElement('div');
+          cell.classList.add('cell');
+          if ( state === 1 ) cell.classList.add('active');
+          rowEl.appendChild( cell );
+        });
+
+        document.body.appendChild( rowEl );
+        prevStates = [ ...states ];
+      }
+
+      function addRow( ruleSet ) {
+        let states = [];
+        for ( let i = 0; i < rowLength; i++ ) {
+          const prev = i > 0 ? prevStates[i - 1] : prevStates[rowLength - 1];
+          const curr = prevStates[i];
+          const next = i < rowLength - 1 ? prevStates[i + 1] : prevStates[1];
+          const newState = ruleSet[`${prev}${curr}${next}`];
+          states.push( newState );
+        }
+        renderRow( states );
+      }
+
+      function clearRows() {
+        document.querySelectorAll('.row').forEach(row => row.remove());
+      }
+
+      function renderRandomRow() {
+        let randomStates = generateRandomStates();
+        renderRow( randomStates );
+      }
+
+      function renderSingleCellRow() {
+        let singleActiveCell = [];
+        for ( let i = 0; i < rowLength; i++ ) {
+          singleActiveCell.push( 0 );
+        }
+        singleActiveCell[ 49 ] = 1;
+        renderRow( singleActiveCell );
+      }
+
+      function calculateRows( ruleSet ) {
+        for ( let i = 0; i < numRows; i++ ) {
+          addRow( ruleSet );
+        }
+      }
+
+      const btnGenerate = document.getElementById('button-generate');
+      const selRuleSet = document.getElementById('select-ruleSet');
+      const selRandom = document.getElementById('select-random');
+      btnGenerate.addEventListener('click', (evt) => {
+        evt.preventDefault();
+        clearRows();
+        if ( selRandom.value === 'yes' ) {
+          renderRandomRow();
+        } else {
+          renderSingleCellRow();
+        }
+        calculateRows( ruleSets[ selRuleSet.value ] );
+      });
+
+      // Render Initial Display
+      // renderRandomRow();
+      renderSingleCellRow();
+      calculateRows( ruleSets['150'] );
+    </script>
+  </body>
+</html>
