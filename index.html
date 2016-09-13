@@ -46,7 +46,8 @@
 
       <label for="select-random">Random?</label>
       <select name="random" id="select-random">
-        <option value="no" selected>No</option>
+        <option value="on" selected>No - Single ON</option>
+        <option value="off">No - Single OFF</option>
         <option value="yes">Yes</option>
       </select>
 
@@ -116,12 +117,21 @@
         renderRow( randomStates );
       }
 
-      function renderSingleCellRow() {
+      function renderSingleOnRow() {
         let singleActiveCell = [];
         for ( let i = 0; i < rowLength; i++ ) {
           singleActiveCell.push( 0 );
         }
         singleActiveCell[ 49 ] = 1;
+        renderRow( singleActiveCell );
+      }
+
+      function renderSingleOffRow() {
+        let singleActiveCell = [];
+        for ( let i = 0; i < rowLength; i++ ) {
+          singleActiveCell.push( 1 );
+        }
+        singleActiveCell[ 49 ] = 0;
         renderRow( singleActiveCell );
       }
 
@@ -139,15 +149,17 @@
         clearRows();
         if ( selRandom.value === 'yes' ) {
           renderRandomRow();
+        } else if (selRandom.value === 'on' ) {
+          renderSingleOnRow();
         } else {
-          renderSingleCellRow();
+          renderSingleOffRow();
         }
         calculateRows( ruleSets[ selRuleSet.value ] );
       });
 
       // Render Initial Display
       // renderRandomRow();
-      renderSingleCellRow();
+      renderSingleOnRow();
       calculateRows( ruleSets['150'] );
     </script>
   </body>
