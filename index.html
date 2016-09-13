@@ -5,6 +5,7 @@
         margin: 0;
         padding: 0;
         width: 100%;
+        font-family: Helvetica, sans-serif;
       }
 
       #controls {
@@ -22,10 +23,16 @@
       .cell.active {
         background-color: #51cafe;
       }
+
+      .source-link {
+        float: right;
+      }
     </style>
   </head>
   <body>
     <div id="controls">
+      <a href="https://github.com/andersryanc/cellular-automata" class="source-link">View on GitHub</a>
+
       <label for="select-ruleSet">Rule Set:</label>
       <select name="ruleSet" id="select-ruleSet">
         <option value="105">105</option>
