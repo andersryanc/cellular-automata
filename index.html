@@ -8,6 +8,15 @@
         font-family: Helvetica, sans-serif;
       }
 
+      #warning {
+        padding: 10px;
+        color: red;
+      }
+
+      #warning + #controls {
+        display: none;
+      }
+
       #controls {
         padding: 10px;
       }
@@ -30,6 +39,11 @@
     </style>
   </head>
   <body>
+    <div id="warning">
+      <a href="https://github.com/andersryanc/cellular-automata" class="source-link">View on GitHub</a>
+      <p>Sorry, it appears your browser does not support all the latest ES6 features which are used in this demo.
+        <br />Please try viewing this page in another browser (like Chrome 52+).</p>
+    </div>
     <div id="controls">
       <a href="https://github.com/andersryanc/cellular-automata" class="source-link">View on GitHub</a>
 
@@ -161,6 +175,8 @@
       // renderRandomRow();
       renderSingleOnRow();
       calculateRows( ruleSets['150'] );
+
+      document.getElementById('warning').remove();
     </script>
   </body>
 </html>
